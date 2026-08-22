@@ -15,18 +15,25 @@ class InputPhoneTextfield extends StatelessWidget {
     return TextFormField(
       controller: phoneController,
       decoration: InputDecoration(
-        hintText: "5xx xxx xx xx",
         labelText: "Telefon",
+        hintText: "5xx xxx xx xx",
         labelStyle: TextStyle(
           color: Colors.grey,
           fontFamily: "Inter"
         ),
         prefixIcon: Padding(padding: EdgeInsets.symmetric(horizontal: 8),child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset("assets/icons/tr_flag.svg",width: 26,height: 26),
             SizedBox(width: 8),
             const Text("+90"),
-            SizedBox(width: 8)
+            SizedBox(width: 8),
+            Container(
+              width: 0.5,
+              height: 42,
+              color: Colors.grey,
+            ),
+            SizedBox(width: 8),
           ],
         )),
         enabledBorder: OutlineInputBorder(
@@ -48,6 +55,7 @@ class InputPhoneTextfield extends StatelessWidget {
       ),
       inputFormatters: [LengthLimitingTextInputFormatter(10)],
       validator: validator,
+      keyboardType: TextInputType.phone,
     );
   }
 }

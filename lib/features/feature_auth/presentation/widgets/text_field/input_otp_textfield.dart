@@ -15,18 +15,24 @@ class InputOtpTextfield extends StatelessWidget {
       controller: otpController,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       defaultPinTheme: PinTheme(
+        height: 48,
+        width: 48,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey,width: 1),
           borderRadius: BorderRadius.circular(12)
-        )
+        ),
       ),
       focusedPinTheme: PinTheme(
+        height: 48,
+        width: 48,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.black,width: 1),
           borderRadius: BorderRadius.circular(12)
         )
       ),
       errorPinTheme: PinTheme(
+        height: 48,
+        width: 48,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.red,width: 1),
           borderRadius: BorderRadius.circular(12)
@@ -34,7 +40,7 @@ class InputOtpTextfield extends StatelessWidget {
       ),
       errorTextStyle: TextStyle(
         color: Colors.red,
-        fontSize: 8
+        fontSize: 12
       ),
       validator: validator,
     );
