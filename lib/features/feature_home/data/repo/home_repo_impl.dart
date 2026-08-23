@@ -40,6 +40,7 @@ class HomeRepoImpl implements HomeRepo {
         ),
       );
     } catch (e) {
+      print("hata $e");
       return Left(e.toCustomException());
     }
   }

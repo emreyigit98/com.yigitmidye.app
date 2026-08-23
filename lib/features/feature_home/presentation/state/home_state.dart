@@ -8,6 +8,7 @@ class HomeState {
   final List<CategoryEntity> categories;
   final List<ProductEntity> products;
   final CategoryEntity? initialCategory;
+  final String errorMessage;
 
   List<ProductEntity> get filterProducts => products.where((product) => product.categoryId == initialCategory?.categoryId).toList();
   
@@ -16,18 +17,21 @@ class HomeState {
   HomeState({
     this.categories = const [],
     this.products = const [],
-    this.initialCategory
+    this.errorMessage = "",
+    this.initialCategory,
   });
 
   HomeState copyWith({
     List<CategoryEntity>? categories,
     List<ProductEntity>? products,
-    CategoryEntity? initialCategory
+    CategoryEntity? initialCategory,
+    String? errorMessage
   }) {
     return HomeState(
       categories: categories ?? this.categories,
       products: products ?? this.products,
-      initialCategory: initialCategory ?? this.initialCategory
+      initialCategory: initialCategory ?? this.initialCategory,
+      errorMessage: errorMessage ?? this.errorMessage
     );
   }
 }
