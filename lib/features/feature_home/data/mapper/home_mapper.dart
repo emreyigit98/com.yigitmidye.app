@@ -24,6 +24,7 @@ extension ProductModelMapper on ProductModel {
       productImg: productImg,
       productName: productName,
       productPrice: productPrice,
+      oldPrice: oldPrice,
       productTitle: productTitle,
     );
   }

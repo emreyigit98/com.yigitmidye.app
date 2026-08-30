@@ -1,6 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:firebase_app/features/feature_auth/presentation/state/auth_status.dart';
+import 'package:flutter/foundation.dart';
 
-class AuthState {
+
+
+class AuthState  {
   final AuthStatus authStatus;
   final String phoneNumber;
   final String verificationId;
@@ -9,7 +13,7 @@ class AuthState {
 
   bool get isResend => resendSecond <= 0;
 
-  AuthState({
+   AuthState({
     this.authStatus = const Idle(),
     this.phoneNumber = "",
     this.verificationId = "",
@@ -32,4 +36,13 @@ class AuthState {
       resendSecond: resendSecond ?? this.resendSecond
     );
   }
+
+  @override
+  List<Object?> get props => [
+    authStatus,
+    phoneNumber,
+    verificationId,
+    forceResendingToken,
+    resendSecond
+  ];
 }

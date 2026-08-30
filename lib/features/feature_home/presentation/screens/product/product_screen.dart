@@ -1,14 +1,24 @@
+import 'package:firebase_app/core/injection/injection.dart';
+import 'package:firebase_app/core/session/presentation/cubit/display_name_cubit.dart';
+import 'package:firebase_app/core/session/presentation/cubit/session_cubit.dart';
+import 'package:firebase_app/core/session/presentation/state/session_state.dart';
 import 'package:firebase_app/features/feature_home/domain/entities/product_entity.dart';
 import 'package:firebase_app/features/feature_home/presentation/bloc/home_bloc.dart';
 import 'package:firebase_app/features/feature_home/presentation/event/home_event.dart';
 import 'package:firebase_app/features/feature_home/presentation/state/home_state.dart';
+import 'package:firebase_app/features/feature_home/presentation/widgets/app_bar/login_message.dart';
+import 'package:firebase_app/features/feature_home/presentation/widgets/app_bar/update_message.dart';
+import 'package:firebase_app/features/feature_home/presentation/widgets/app_bar/welcome_message.dart';
 import 'package:firebase_app/features/feature_home/presentation/widgets/card/grid_card.dart';
 import 'package:firebase_app/features/feature_home/presentation/widgets/card/horizontal_card.dart';
+import 'package:firebase_app/features/feature_home/presentation/widgets/header/login_header.dart';
+import 'package:firebase_app/features/feature_home/presentation/widgets/sheet/product_content_sheet.dart';
+import 'package:firebase_app/features/feature_home/presentation/widgets/sheet/update_name_sheet.dart';
 import 'package:firebase_app/features/feature_home/presentation/widgets/spacing/home_spacing.dart';
 import 'package:firebase_app/features/feature_home/presentation/widgets/title/home_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key});
@@ -24,27 +34,89 @@ class _ProductScreenState extends State<ProductScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Column(
-          crossAxisAlignment: .start,
-          children: [
-            Text("İyi akşamlar'Emre",style: TextStyle(
-              fontFamily: "Inter",
-              fontSize: 10,
-              fontWeight: FontWeight.w600
-            ),),
-            Text("Bugün canın midye mi çekti? 🦪",style: TextStyle(
-              fontSize: 12
-            ),)
-          ],
+        surfaceTintColor: Colors.white,
+        title: BlocBuilder<SessionCubit, SessionState>(
+          builder: (context, state) {
+            if (state is Authenticated) {
+              if (state.user.displayName == null) {
+                return UpdateMessage(
+                  onTap: () => _showUpdataNameSheet(context),
+                );
+              } else {
+                return WelcomeMessage(
+                  displayName: state.user.displayName ?? "",
+                );
+              }
+            }
+            if (state is Unauthenticated) {
+              return LoginMessage(
+                onTap: () {
+                  context.push("/input-phone");
+                },
+              );
+            }
+            return SizedBox.shrink();
+          },
         ),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Container(height: 1, color: Colors.grey),
         ),
-      drawer: Drawer(),
+      ),
+      drawer: Drawer(
+        backgroundColor: Colors.white,
+        child: BlocBuilder<SessionCubit, SessionState>(
+          builder: (context, state) {
+            return ListView(
+              children: [
+                if (state is Authenticated) ...[
+                  if (state.user.displayName != null) ...[
+                    UserAccountsDrawerHeader(
+                      decoration: BoxDecoration(color: Color(0XFFFA0351)),
+                      accountName: Text(
+                        "İyi akşamlar,${state.user.displayName}",
+                      ),
+                      accountEmail: null,
+                      currentAccountPicture: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Color(0XFFFA0351),
+                        child: Text(
+                          state.user.displayName?.characters.firstOrNull ?? "",
+                        ),
+                      ),
+                    ),
+                  ],
+
+                  ListTile(title: Text("Anasayfa")),
+                  ListTile(title: Text("Adreslerim")),
+                  ListTile(title: Text("Siparişlerim")),
+                  ListTile(title: Text("Profilim")),
+                  ListTile(
+                    title: Text("Çıkış yap"),
+                    onTap: () {
+                      context.pop();
+                      context.read<SessionCubit>().signOut();
+                    },
+                  ),
+                ],
+                if (state is Unauthenticated) ...[
+                  LoginHeader(onTap: () {
+                    context.pop();
+                    context.push("/input-phone");
+                  })
+                ],
+              ],
+            );
+          },
+        ),
+      ),
       body: SafeArea(
         child: BlocConsumer<HomeBloc, HomeState>(
           listener: (context, state) {},
           builder: (context, state) {
             return CustomScrollView(
               slivers: [
+                HomeSpacing(),
                 HomeTitle(title: "Kategoriler"),
                 HomeSpacing(),
 
@@ -95,7 +167,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
                 SliverToBoxAdapter(
                   child: SizedBox(
-                    height: 150,
+                    height: 180,
                     child: ListView.separated(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       scrollDirection: Axis.horizontal,
@@ -146,137 +218,32 @@ class _ProductScreenState extends State<ProductScreen> {
 }
 
 void _showProductSheet(BuildContext context, ProductEntity product) {
+  final value = context.read<HomeBloc>();
+
   showModalBottomSheet(
     isScrollControlled: true,
     showDragHandle: true,
     context: context,
     builder: (context) {
-      return ProductSheetContent(product: product);
+      return BlocProvider.value(
+        value: value,
+        child: ProductSheetContent(product: product),
+      );
     },
   );
 }
 
-class ProductSheetContent extends StatefulWidget {
-  final ProductEntity product;
-  const ProductSheetContent({super.key, required this.product});
-
-  @override
-  State<ProductSheetContent> createState() => _ProductSheetContentState();
-}
-
-class _ProductSheetContentState extends State<ProductSheetContent> {
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flexible(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      height: 220,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          widget.product.productImg,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      widget.product.productName,
-                      style: TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      widget.product.productTitle,
-                      style: TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: .spaceBetween,
-                    children: [
-                      Text("Toplam tutar",style: TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold
-                      )),
-                      Text("${10.toStringAsFixed(2)} \u20Ba"),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: .spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: SvgPicture.asset(
-                              "assets/icons/minus_icon.svg",
-                              width: 24,
-                              height: 24,
-                            ),
-                          ),
-                          SizedBox(width: 4),
-                          Text("1"),
-                          SizedBox(width: 4),
-                          IconButton(
-                            onPressed: () {},
-                            icon: SvgPicture.asset(
-                              "assets/icons/plus_icon.svg",
-                              width: 24,
-                              height: 24,
-                            ),
-                          ),
-                        ],
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)
-                          ),
-                          backgroundColor: Color(0xFFFA0351),
-                          foregroundColor: Colors.white
-                        ),
-                        onPressed: () {},
-                        child: Text("Sepete ekle"),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+void _showUpdataNameSheet(BuildContext context) {
+  showModalBottomSheet(
+    backgroundColor: Colors.white,
+    isScrollControlled: true,
+    showDragHandle: true,
+    context: context,
+    builder: (context) {
+      return BlocProvider(
+        create: (context) => servisLocarator<DisplayNameCubit>(),
+        child: UpdateNameSheet(),
+      );
+    },
+  );
 }

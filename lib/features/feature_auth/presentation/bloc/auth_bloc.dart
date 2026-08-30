@@ -28,7 +28,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> sendSmsCode(SendCodeEvent event, Emitter<AuthState> emit) async {
     emit(state.copyWith(authStatus: SendCodeLoading()));
 
-    final result = await _sendSmsCodeUsecase.sendSmsCode(event.phoneNumber);
+    final result = await _sendSmsCodeUsecase.sendSmsCode(event.phoneNumber,state.forceResendingToken);
 
     switch (result) {
       case CodeSendSuccess(
@@ -110,7 +110,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _startTimer(StartTimerEvent event, Emitter<AuthState> emit) {
     _timer?.cancel();
-    emit(state.copyWith(resendSecond: 60,));
+    emit(state.copyWith(resendSecond: 60));
     _timer = Timer.periodic(Duration(seconds: 1), (time) {
       final currentSecond = state.resendSecond;
       if (currentSecond > 0) {

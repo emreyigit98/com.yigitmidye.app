@@ -14,13 +14,12 @@ class GridCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: SizedBox(
-              width: double.infinity,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(productEntity.productImg,
-                  fit: BoxFit.cover,
-                ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                productEntity.productImg,
+                fit: BoxFit.cover,
+                width: double.infinity,
               ),
             ),
           ),
@@ -36,13 +35,14 @@ class GridCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 5),
-          Text("${productEntity.productPrice.toStringAsFixed(2)} \u20Ba",
+          Text(
+            "${productEntity.productPrice.toStringAsFixed(2)} \u20Ba",
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontFamily: "Inter",
-              color: Colors.grey,
+              color: Color(0XFFFA0351),
               fontSize: 12,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],

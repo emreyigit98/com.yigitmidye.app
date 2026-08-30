@@ -9,6 +9,7 @@ class ProductModel {
   final String productImg;
   final String productName;
   final double productPrice;
+  final double oldPrice;
   final String productTitle;
 
   ProductModel({
@@ -19,6 +20,7 @@ class ProductModel {
     required this.productImg,
     required this.productName,
     required this.productPrice,
+    required this.oldPrice,
     required this.productTitle,
   });
 
@@ -32,6 +34,7 @@ class ProductModel {
       productImg: snapshot?["product_img"] ?? "",
       productName: snapshot?["product_name"] ?? "",
       productPrice: snapshot?["product_price"] ?? 0.0,
+      oldPrice: snapshot?["old_price"] ?? 0.0,
       productTitle: snapshot?["product_title"] ?? "",
     );
   }

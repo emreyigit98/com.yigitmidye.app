@@ -11,6 +11,26 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:cloud_firestore/cloud_firestore.dart' as _i974;
 import 'package:firebase_app/core/injection/module.dart' as _i609;
+import 'package:firebase_app/core/session/data/data_source/session_datasource_repo.dart'
+    as _i1029;
+import 'package:firebase_app/core/session/data/data_source/session_datasource_repo_impl.dart'
+    as _i905;
+import 'package:firebase_app/core/session/data/repo/session_repo_impl.dart'
+    as _i867;
+import 'package:firebase_app/core/session/domain/repo/session_repo.dart'
+    as _i843;
+import 'package:firebase_app/core/session/domain/use_cases/update_name_usecase.dart'
+    as _i408;
+import 'package:firebase_app/core/session/domain/use_cases/user_changes_usecase.dart'
+    as _i996;
+import 'package:firebase_app/core/session/domain/use_cases/user_reolad_usecase.dart'
+    as _i746;
+import 'package:firebase_app/core/session/domain/use_cases/user_signout_usecase.dart'
+    as _i197;
+import 'package:firebase_app/core/session/presentation/cubit/display_name_cubit.dart'
+    as _i627;
+import 'package:firebase_app/core/session/presentation/cubit/session_cubit.dart'
+    as _i405;
 import 'package:firebase_app/features/feature_auth/data/data_source/auth_datasource_repo.dart'
     as _i594;
 import 'package:firebase_app/features/feature_auth/data/data_source/auth_datasource_repo_impl.dart'
@@ -60,6 +80,24 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i594.AuthDatasourceRepo>(
       () => _i542.AuthDatasourceRepoImpl(gh<_i59.FirebaseAuth>()),
     );
+    gh.lazySingleton<_i1029.SessionDatasourceRepo>(
+      () => _i905.SessionDatasourceRepoImpl(gh<_i59.FirebaseAuth>()),
+    );
+    gh.lazySingleton<_i843.SessionRepo>(
+      () => _i867.SessionRepoImpl(gh<_i1029.SessionDatasourceRepo>()),
+    );
+    gh.lazySingleton<_i408.UpdateNameUsecase>(
+      () => _i408.UpdateNameUsecase(gh<_i843.SessionRepo>()),
+    );
+    gh.lazySingleton<_i996.UserChangesUsecase>(
+      () => _i996.UserChangesUsecase(gh<_i843.SessionRepo>()),
+    );
+    gh.lazySingleton<_i746.UserReoladUsecase>(
+      () => _i746.UserReoladUsecase(gh<_i843.SessionRepo>()),
+    );
+    gh.lazySingleton<_i197.UserSignoutUsecase>(
+      () => _i197.UserSignoutUsecase(gh<_i843.SessionRepo>()),
+    );
     gh.lazySingleton<_i473.HomeDataUsecase>(
       () => _i473.HomeDataUsecase(gh<_i882.HomeRepo>()),
     );
@@ -69,11 +107,21 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i874.HomeBloc>(
       () => _i874.HomeBloc(gh<_i473.HomeDataUsecase>()),
     );
+    gh.factory<_i627.DisplayNameCubit>(
+      () => _i627.DisplayNameCubit(gh<_i408.UpdateNameUsecase>()),
+    );
     gh.lazySingleton<_i943.SendSmsCodeUsecase>(
       () => _i943.SendSmsCodeUsecase(gh<_i899.AuthRepo>()),
     );
     gh.lazySingleton<_i351.VerifyPhoneUsecase>(
       () => _i351.VerifyPhoneUsecase(gh<_i899.AuthRepo>()),
+    );
+    gh.factory<_i405.SessionCubit>(
+      () => _i405.SessionCubit(
+        gh<_i996.UserChangesUsecase>(),
+        gh<_i746.UserReoladUsecase>(),
+        gh<_i197.UserSignoutUsecase>(),
+      ),
     );
     gh.factory<_i129.AuthBloc>(
       () => _i129.AuthBloc(

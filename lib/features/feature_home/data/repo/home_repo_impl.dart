@@ -18,7 +18,7 @@ class HomeRepoImpl implements HomeRepo {
 
   @override
   Future<Either<CustomException, HomeEntity>> getHomeData() async {
-
+    
     try {
       final result = await Future.wait([
         _homeDatasourceRepo.getCategories(),
@@ -40,7 +40,6 @@ class HomeRepoImpl implements HomeRepo {
         ),
       );
     } catch (e) {
-      print("hata $e");
       return Left(e.toCustomException());
     }
   }
