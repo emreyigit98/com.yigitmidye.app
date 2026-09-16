@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:firebase_app/core/extensions/custom_exceptions_mapper.dart';
 import 'package:firebase_app/core/session/domain/entity/user_entity.dart';
-import 'package:firebase_app/core/session/domain/use_cases/update_name_usecase.dart';
 import 'package:firebase_app/core/session/domain/use_cases/user_changes_usecase.dart';
 import 'package:firebase_app/core/session/domain/use_cases/user_reolad_usecase.dart';
 import 'package:firebase_app/core/session/domain/use_cases/user_signout_usecase.dart';

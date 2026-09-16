@@ -1,10 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_app/features/feature_auth/presentation/state/auth_status.dart';
-import 'package:flutter/foundation.dart';
 
 
-
-class AuthState  {
+class AuthState extends Equatable {
   final AuthStatus authStatus;
   final String phoneNumber;
   final String verificationId;
@@ -13,7 +11,7 @@ class AuthState  {
 
   bool get isResend => resendSecond <= 0;
 
-   AuthState({
+   const AuthState({
     this.authStatus = const Idle(),
     this.phoneNumber = "",
     this.verificationId = "",

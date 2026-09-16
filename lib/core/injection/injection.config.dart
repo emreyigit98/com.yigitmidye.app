@@ -1,5 +1,5 @@
-// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
 
 // **************************************************************************
 // InjectableConfigGenerator
@@ -45,6 +45,26 @@ import 'package:firebase_app/features/feature_auth/domain/use_cases/verify_phone
     as _i351;
 import 'package:firebase_app/features/feature_auth/presentation/bloc/auth_bloc.dart'
     as _i129;
+import 'package:firebase_app/features/feature_cart/data/data_source/cart_datasource_repo.dart'
+    as _i926;
+import 'package:firebase_app/features/feature_cart/data/data_source/cart_datasource_repo_impl.dart'
+    as _i447;
+import 'package:firebase_app/features/feature_cart/data/repo/cart_repo_impl.dart'
+    as _i579;
+import 'package:firebase_app/features/feature_cart/domain/repo/cart_repo.dart'
+    as _i851;
+import 'package:firebase_app/features/feature_cart/domain/use_cases/cart_count_usecase.dart'
+    as _i496;
+import 'package:firebase_app/features/feature_cart/domain/use_cases/get_cart_items_usecase.dart'
+    as _i299;
+import 'package:firebase_app/features/feature_cart/domain/use_cases/set_cart_item_usecase.dart'
+    as _i465;
+import 'package:firebase_app/features/feature_cart/presentation/bloc/cart_bloc.dart'
+    as _i383;
+import 'package:firebase_app/features/feature_cart/presentation/bloc/cart_count_cubit.dart'
+    as _i572;
+import 'package:firebase_app/features/feature_cart/presentation/bloc/set_cart_cubit.dart'
+    as _i85;
 import 'package:firebase_app/features/feature_home/data/data_source/home_datasource_repo.dart'
     as _i397;
 import 'package:firebase_app/features/feature_home/data/data_source/home_datasource_repo_impl.dart'
@@ -74,17 +94,53 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i397.HomeDatasourceRepo>(
       () => _i316.HomeDatasourceRepoImpl(gh<_i974.FirebaseFirestore>()),
     );
+    gh.lazySingleton<_i926.CartDatasourceRepo>(
+      () => _i447.CartDatasourceRepoImpl(
+        gh<_i59.FirebaseAuth>(),
+        gh<_i974.FirebaseFirestore>(),
+      ),
+    );
     gh.lazySingleton<_i882.HomeRepo>(
       () => _i931.HomeRepoImpl(gh<_i397.HomeDatasourceRepo>()),
-    );
-    gh.lazySingleton<_i594.AuthDatasourceRepo>(
-      () => _i542.AuthDatasourceRepoImpl(gh<_i59.FirebaseAuth>()),
     );
     gh.lazySingleton<_i1029.SessionDatasourceRepo>(
       () => _i905.SessionDatasourceRepoImpl(gh<_i59.FirebaseAuth>()),
     );
+    gh.lazySingleton<_i594.AuthDatasourceRepo>(
+      () => _i542.AuthDatasourceRepoImpl(gh<_i59.FirebaseAuth>()),
+    );
     gh.lazySingleton<_i843.SessionRepo>(
       () => _i867.SessionRepoImpl(gh<_i1029.SessionDatasourceRepo>()),
+    );
+    gh.lazySingleton<_i899.AuthRepo>(
+      () => _i712.AuthRepoImpl(gh<_i594.AuthDatasourceRepo>()),
+    );
+    gh.lazySingleton<_i851.CartRepo>(
+      () => _i579.CartRepoImpl(gh<_i926.CartDatasourceRepo>()),
+    );
+    gh.lazySingleton<_i943.SendSmsCodeUsecase>(
+      () => _i943.SendSmsCodeUsecase(gh<_i899.AuthRepo>()),
+    );
+    gh.lazySingleton<_i351.VerifyPhoneUsecase>(
+      () => _i351.VerifyPhoneUsecase(gh<_i899.AuthRepo>()),
+    );
+    gh.lazySingleton<_i473.HomeDataUsecase>(
+      () => _i473.HomeDataUsecase(gh<_i882.HomeRepo>()),
+    );
+    gh.factory<_i874.HomeBloc>(
+      () => _i874.HomeBloc(gh<_i473.HomeDataUsecase>()),
+    );
+    gh.lazySingleton<_i496.CartCountUsecase>(
+      () => _i496.CartCountUsecase(gh<_i851.CartRepo>()),
+    );
+    gh.lazySingleton<_i299.GetCartItemsUsecase>(
+      () => _i299.GetCartItemsUsecase(gh<_i851.CartRepo>()),
+    );
+    gh.lazySingleton<_i465.SetCartItemUsecase>(
+      () => _i465.SetCartItemUsecase(gh<_i851.CartRepo>()),
+    );
+    gh.factory<_i383.CartBloc>(
+      () => _i383.CartBloc(gh<_i299.GetCartItemsUsecase>()),
     );
     gh.lazySingleton<_i408.UpdateNameUsecase>(
       () => _i408.UpdateNameUsecase(gh<_i843.SessionRepo>()),
@@ -98,35 +154,26 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i197.UserSignoutUsecase>(
       () => _i197.UserSignoutUsecase(gh<_i843.SessionRepo>()),
     );
-    gh.lazySingleton<_i473.HomeDataUsecase>(
-      () => _i473.HomeDataUsecase(gh<_i882.HomeRepo>()),
+    gh.factory<_i572.CartCountCubit>(
+      () => _i572.CartCountCubit(gh<_i496.CartCountUsecase>()),
     );
-    gh.lazySingleton<_i899.AuthRepo>(
-      () => _i712.AuthRepoImpl(gh<_i594.AuthDatasourceRepo>()),
-    );
-    gh.factory<_i874.HomeBloc>(
-      () => _i874.HomeBloc(gh<_i473.HomeDataUsecase>()),
+    gh.factory<_i129.AuthBloc>(
+      () => _i129.AuthBloc(
+        gh<_i943.SendSmsCodeUsecase>(),
+        gh<_i351.VerifyPhoneUsecase>(),
+      ),
     );
     gh.factory<_i627.DisplayNameCubit>(
       () => _i627.DisplayNameCubit(gh<_i408.UpdateNameUsecase>()),
     );
-    gh.lazySingleton<_i943.SendSmsCodeUsecase>(
-      () => _i943.SendSmsCodeUsecase(gh<_i899.AuthRepo>()),
-    );
-    gh.lazySingleton<_i351.VerifyPhoneUsecase>(
-      () => _i351.VerifyPhoneUsecase(gh<_i899.AuthRepo>()),
+    gh.factory<_i85.SetCartCubit>(
+      () => _i85.SetCartCubit(gh<_i465.SetCartItemUsecase>()),
     );
     gh.factory<_i405.SessionCubit>(
       () => _i405.SessionCubit(
         gh<_i996.UserChangesUsecase>(),
         gh<_i746.UserReoladUsecase>(),
         gh<_i197.UserSignoutUsecase>(),
-      ),
-    );
-    gh.factory<_i129.AuthBloc>(
-      () => _i129.AuthBloc(
-        gh<_i943.SendSmsCodeUsecase>(),
-        gh<_i351.VerifyPhoneUsecase>(),
       ),
     );
     return this;

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_app/core/extensions/custom_exceptions_mapper.dart';
 import 'package:firebase_app/features/feature_auth/domain/result/auth_result.dart';
 import 'package:firebase_app/features/feature_auth/domain/use_cases/send_sms_code_usecase.dart';

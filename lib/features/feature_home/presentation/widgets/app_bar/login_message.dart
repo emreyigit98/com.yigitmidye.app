@@ -9,27 +9,33 @@ class LoginMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Text(
-            "🦪 Yiğit Midye'ye hoş geldiniz",
-            style: TextStyle(
-              fontFamily: "Inter",
-              fontSize: 14,
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: 2),
-          Text(
-            "Giriş yap, siparişini hemen oluştur.",
-            style: TextStyle(
-              fontFamily: "Inter",
-              fontSize: 12,
-              color: Colors.black,
-              fontWeight: FontWeight.w300,
-            ),
+          Icon(Icons.logout),
+          SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Yiğit Midye'ye hoş geldiniz",
+                style: TextStyle(
+                  fontFamily: "Inter",
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 2),
+              Text(
+                "Giriş yap, siparişini hemen oluştur.",
+                style: TextStyle(
+                  fontFamily: "Inter",
+                  fontSize: 12,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ],
           ),
         ],
       ),
