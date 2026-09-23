@@ -83,6 +83,10 @@ class _ProductScreenState extends State<ProductScreen> {
                   child: DrawerContent(
                     displayName: state.user.displayName,
                     goHome: () => context.pop(),
+                    goAddress: () {
+                      context.pop();
+                      context.push("/adress");
+                    },
                     signOut: () {
                       context.pop();
                       context.read<SessionCubit>().signOut();

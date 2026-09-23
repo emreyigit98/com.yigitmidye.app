@@ -61,5 +61,15 @@ class CartRepoImpl implements CartRepo {
   }
 
   @override
+  Future<Either<CustomException, Unit>> deleteCartItem(String productId) async {
+    try {
+      await _cartDatasourceRepo.deleteCartItem(productId);
+      return Right(unit);
+    }catch(exception) {
+      return Left(exception.toCustomException());
+    }
+  }
+
+  @override
   Stream<int> cartCount() => _cartDatasourceRepo.cartCount();
 }

@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class DrawerContent extends StatelessWidget {
   final String? displayName;
   final VoidCallback goHome;
+  final VoidCallback goAddress;
   final VoidCallback signOut;
 
   const DrawerContent({
     super.key,
     required this.displayName,
     required this.goHome,
+    required this.goAddress,
     required this.signOut,
   });
 
@@ -36,6 +38,7 @@ class DrawerContent extends StatelessWidget {
           title: Text("Adreslerim"),
           leading: Icon(Icons.location_pin),
           trailing: Icon(Icons.chevron_right_rounded),
+          onTap: goAddress,
         ),
         ListTile(
           title: Text("Siparişlerim"),

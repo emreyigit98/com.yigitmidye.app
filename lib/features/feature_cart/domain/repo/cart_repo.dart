@@ -7,5 +7,6 @@ import 'package:firebase_app/features/feature_cart/domain/entity/cart_entity.dar
 abstract class CartRepo {
   Future<Either<CustomException,Unit>> setCartItem(CartEntity cartEntity);
   Future<Either<CustomException,List<CartProductModel>>> getCartProductItems();
+  Future<Either<CustomException,Unit>> deleteCartItem(String productId);
   Stream<int> cartCount();
 }

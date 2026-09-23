@@ -1,12 +1,17 @@
 import 'package:firebase_app/core/injection/injection.dart';
 import 'package:firebase_app/core/session/presentation/cubit/session_cubit.dart';
 import 'package:firebase_app/core/session/presentation/state/session_state.dart';
+import 'package:firebase_app/features/feature_adress/presentation/bloc/adress_bloc.dart';
+import 'package:firebase_app/features/feature_adress/presentation/event/adress_event.dart';
+import 'package:firebase_app/features/feature_adress/presentation/screens/adress_screen.dart';
+import 'package:firebase_app/features/feature_adress/presentation/screens/save_adress_screen.dart';
 import 'package:firebase_app/features/feature_auth/presentation/bloc/auth_bloc.dart';
 import 'package:firebase_app/features/feature_auth/presentation/screens/input_otp_screen.dart';
 import 'package:firebase_app/features/feature_auth/presentation/screens/input_phone_screen.dart';
 import 'package:firebase_app/features/feature_cart/presentation/bloc/cart_bloc.dart';
 import 'package:firebase_app/features/feature_cart/presentation/bloc/cart_count_cubit.dart';
 import 'package:firebase_app/features/feature_cart/presentation/event/cart_event.dart';
+import 'package:firebase_app/features/feature_cart/presentation/screens/cart_adress_screen.dart';
 import 'package:firebase_app/features/feature_cart/presentation/screens/cart_screen.dart';
 import 'package:firebase_app/features/feature_home/presentation/bloc/home_bloc.dart';
 import 'package:firebase_app/features/feature_home/presentation/event/home_event.dart';
@@ -73,12 +78,28 @@ class AppRouter {
         builder: (context, state, child) {
           return BlocProvider(
             create: (context) =>
-                servisLocarator<CartBloc>()..add(GetCartItemsEvent()),
+                servisLocarator<CartBloc>(),
             child: child,
           );
         },
         routes: [
           GoRoute(path: "/cart", builder: (context, state) => CartScreen()),
+          GoRoute(path: "/get-adress",builder: (context, state) => CartAdressScreen())
+        ],
+      ),
+      ShellRoute(
+        builder: (context, state, child) {
+          return BlocProvider(
+            create: (context) => servisLocarator<AdressBloc>()..add(GetAdressEvent()),
+            child: child,
+          );
+        },
+        routes: [
+          GoRoute(path: "/adress", builder: (context, state) => AdressScreen()),
+          GoRoute(
+            path: "/save-adress",
+            builder: (context, state) => SaveAdressScreen(),
+          ),
         ],
       ),
     ],

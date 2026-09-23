@@ -31,6 +31,22 @@ import 'package:firebase_app/core/session/presentation/cubit/display_name_cubit.
     as _i627;
 import 'package:firebase_app/core/session/presentation/cubit/session_cubit.dart'
     as _i405;
+import 'package:firebase_app/features/feature_adress/data/data_source/adress_datasource_repo.dart'
+    as _i641;
+import 'package:firebase_app/features/feature_adress/data/data_source/adress_datasource_repo_impl.dart'
+    as _i325;
+import 'package:firebase_app/features/feature_adress/data/repo/adress_repo_impl.dart'
+    as _i965;
+import 'package:firebase_app/features/feature_adress/domain/repo/adress_repo.dart'
+    as _i780;
+import 'package:firebase_app/features/feature_adress/domain/use_cases/delete_adress_usecase.dart'
+    as _i711;
+import 'package:firebase_app/features/feature_adress/domain/use_cases/get_adreses_usecase.dart'
+    as _i53;
+import 'package:firebase_app/features/feature_adress/domain/use_cases/save_adress_usecase.dart'
+    as _i30;
+import 'package:firebase_app/features/feature_adress/presentation/bloc/adress_bloc.dart'
+    as _i146;
 import 'package:firebase_app/features/feature_auth/data/data_source/auth_datasource_repo.dart'
     as _i594;
 import 'package:firebase_app/features/feature_auth/data/data_source/auth_datasource_repo_impl.dart'
@@ -55,6 +71,8 @@ import 'package:firebase_app/features/feature_cart/domain/repo/cart_repo.dart'
     as _i851;
 import 'package:firebase_app/features/feature_cart/domain/use_cases/cart_count_usecase.dart'
     as _i496;
+import 'package:firebase_app/features/feature_cart/domain/use_cases/delete_cart_item_usecase.dart'
+    as _i655;
 import 'package:firebase_app/features/feature_cart/domain/use_cases/get_cart_items_usecase.dart'
     as _i299;
 import 'package:firebase_app/features/feature_cart/domain/use_cases/set_cart_item_usecase.dart'
@@ -94,11 +112,29 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i397.HomeDatasourceRepo>(
       () => _i316.HomeDatasourceRepoImpl(gh<_i974.FirebaseFirestore>()),
     );
+    gh.lazySingleton<_i641.AdressDatasourceRepo>(
+      () => _i325.AdressDatasourceRepoImpl(
+        gh<_i59.FirebaseAuth>(),
+        gh<_i974.FirebaseFirestore>(),
+      ),
+    );
+    gh.lazySingleton<_i780.AdressRepo>(
+      () => _i965.AdressRepoImpl(gh<_i641.AdressDatasourceRepo>()),
+    );
     gh.lazySingleton<_i926.CartDatasourceRepo>(
       () => _i447.CartDatasourceRepoImpl(
         gh<_i59.FirebaseAuth>(),
         gh<_i974.FirebaseFirestore>(),
       ),
+    );
+    gh.lazySingleton<_i711.DeleteAdressUsecase>(
+      () => _i711.DeleteAdressUsecase(gh<_i780.AdressRepo>()),
+    );
+    gh.lazySingleton<_i53.GetAdresesUsecase>(
+      () => _i53.GetAdresesUsecase(gh<_i780.AdressRepo>()),
+    );
+    gh.lazySingleton<_i30.SaveAdressUsecase>(
+      () => _i30.SaveAdressUsecase(gh<_i780.AdressRepo>()),
     );
     gh.lazySingleton<_i882.HomeRepo>(
       () => _i931.HomeRepoImpl(gh<_i397.HomeDatasourceRepo>()),
@@ -127,20 +163,27 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i473.HomeDataUsecase>(
       () => _i473.HomeDataUsecase(gh<_i882.HomeRepo>()),
     );
+    gh.factory<_i146.AdressBloc>(
+      () => _i146.AdressBloc(
+        gh<_i30.SaveAdressUsecase>(),
+        gh<_i53.GetAdresesUsecase>(),
+        gh<_i711.DeleteAdressUsecase>(),
+      ),
+    );
     gh.factory<_i874.HomeBloc>(
       () => _i874.HomeBloc(gh<_i473.HomeDataUsecase>()),
     );
     gh.lazySingleton<_i496.CartCountUsecase>(
       () => _i496.CartCountUsecase(gh<_i851.CartRepo>()),
     );
+    gh.lazySingleton<_i655.DeleteCartItemUsecase>(
+      () => _i655.DeleteCartItemUsecase(gh<_i851.CartRepo>()),
+    );
     gh.lazySingleton<_i299.GetCartItemsUsecase>(
       () => _i299.GetCartItemsUsecase(gh<_i851.CartRepo>()),
     );
     gh.lazySingleton<_i465.SetCartItemUsecase>(
       () => _i465.SetCartItemUsecase(gh<_i851.CartRepo>()),
-    );
-    gh.factory<_i383.CartBloc>(
-      () => _i383.CartBloc(gh<_i299.GetCartItemsUsecase>()),
     );
     gh.lazySingleton<_i408.UpdateNameUsecase>(
       () => _i408.UpdateNameUsecase(gh<_i843.SessionRepo>()),
@@ -168,6 +211,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i85.SetCartCubit>(
       () => _i85.SetCartCubit(gh<_i465.SetCartItemUsecase>()),
+    );
+    gh.factory<_i383.CartBloc>(
+      () => _i383.CartBloc(
+        gh<_i299.GetCartItemsUsecase>(),
+        gh<_i465.SetCartItemUsecase>(),
+        gh<_i655.DeleteCartItemUsecase>(),
+        gh<_i53.GetAdresesUsecase>(),
+      ),
     );
     gh.factory<_i405.SessionCubit>(
       () => _i405.SessionCubit(

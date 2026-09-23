@@ -42,6 +42,14 @@ class CartDatasourceRepoImpl implements CartDatasourceRepo {
   }
 
   @override
+  Future<void> deleteCartItem(String productId) async {
+    final user = _firebaseAuth.currentUser;
+    if(user == null) throw UserNotFound();
+    await _firebaseFirestore.collection(Constants.users).doc(user.uid)
+      .collection(Constants.cart).doc(productId).delete();
+  }
+
+  @override
   Stream<int> cartCount() {
     final user = _firebaseAuth.currentUser;
     if(user == null) {
