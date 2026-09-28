@@ -77,6 +77,8 @@ import 'package:firebase_app/features/feature_cart/domain/use_cases/get_cart_ite
     as _i299;
 import 'package:firebase_app/features/feature_cart/domain/use_cases/set_cart_item_usecase.dart'
     as _i465;
+import 'package:firebase_app/features/feature_cart/domain/use_cases/set_order_usecase.dart'
+    as _i320;
 import 'package:firebase_app/features/feature_cart/presentation/bloc/cart_bloc.dart'
     as _i383;
 import 'package:firebase_app/features/feature_cart/presentation/bloc/cart_count_cubit.dart'
@@ -206,6 +208,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i351.VerifyPhoneUsecase>(),
       ),
     );
+    gh.lazySingleton<_i320.SetOrderUsecase>(
+      () => _i320.SetOrderUsecase(gh<_i851.CartRepo>()),
+    );
     gh.factory<_i627.DisplayNameCubit>(
       () => _i627.DisplayNameCubit(gh<_i408.UpdateNameUsecase>()),
     );
@@ -218,6 +223,7 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i465.SetCartItemUsecase>(),
         gh<_i655.DeleteCartItemUsecase>(),
         gh<_i53.GetAdresesUsecase>(),
+        gh<_i320.SetOrderUsecase>(),
       ),
     );
     gh.factory<_i405.SessionCubit>(

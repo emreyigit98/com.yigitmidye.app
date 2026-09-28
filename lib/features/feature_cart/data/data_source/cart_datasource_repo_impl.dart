@@ -5,6 +5,7 @@ import 'package:firebase_app/core/exceptions/custom_exception.dart';
 import 'package:firebase_app/features/feature_cart/data/data_source/cart_datasource_repo.dart';
 import 'package:firebase_app/features/feature_cart/data/model/cart_model.dart';
 import 'package:firebase_app/features/feature_cart/data/model/product_model.dart';
+import 'package:firebase_app/features/feature_cart/data/model/set_order_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 
@@ -57,5 +58,15 @@ class CartDatasourceRepoImpl implements CartDatasourceRepo {
     }
     return _firebaseFirestore.collection(Constants.users).doc(user.uid)
     .collection(Constants.cart).snapshots().map((snap) => snap.size);
+  }
+
+  @override
+  Future<void> setOrderItem(SetOrderModel model) async {
+    final user = _firebaseAuth.currentUser;
+    if(user == null) throw UserNotFound();
+    await _firebaseFirestore.collection("Orders").doc(model.orderId).set(
+      model.toJson(user.uid, user.phoneNumber ?? ""),
+      SetOptions(merge: true)
+    );
   }
 }

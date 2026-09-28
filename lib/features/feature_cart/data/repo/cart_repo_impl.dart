@@ -3,13 +3,16 @@ import 'package:firebase_app/core/exceptions/custom_exception.dart';
 import 'package:firebase_app/core/extensions/custom_exceptions_mapper.dart';
 import 'package:firebase_app/features/feature_cart/data/data_source/cart_datasource_repo.dart';
 import 'package:firebase_app/features/feature_cart/data/model/cart_model.dart';
+import 'package:firebase_app/features/feature_cart/data/model/set_order_model.dart';
 import 'package:firebase_app/features/feature_cart/domain/entity/cart_product_model.dart';
 import 'package:firebase_app/features/feature_cart/domain/entity/cart_entity.dart';
+import 'package:firebase_app/features/feature_cart/domain/entity/set_order_entity.dart';
 import 'package:firebase_app/features/feature_cart/domain/repo/cart_repo.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: CartRepo)
 class CartRepoImpl implements CartRepo {
+
   final CartDatasourceRepo _cartDatasourceRepo;
   CartRepoImpl(this._cartDatasourceRepo);
 
@@ -72,4 +75,14 @@ class CartRepoImpl implements CartRepo {
 
   @override
   Stream<int> cartCount() => _cartDatasourceRepo.cartCount();
+
+  @override
+  Future<Either<CustomException, Unit>> setOrderItem(SetOrderEntity entity) async {
+    try {
+      await _cartDatasourceRepo.setOrderItem(SetOrderModel.fromEntity(entity));
+      return Right(unit);
+    }catch(exception) {
+      return Left(exception.toCustomException());
+    }
+  }
 }

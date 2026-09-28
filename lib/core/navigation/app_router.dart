@@ -13,6 +13,9 @@ import 'package:firebase_app/features/feature_cart/presentation/bloc/cart_count_
 import 'package:firebase_app/features/feature_cart/presentation/event/cart_event.dart';
 import 'package:firebase_app/features/feature_cart/presentation/screens/cart_adress_screen.dart';
 import 'package:firebase_app/features/feature_cart/presentation/screens/cart_screen.dart';
+import 'package:firebase_app/features/feature_cart/presentation/screens/note_screen.dart';
+import 'package:firebase_app/features/feature_cart/presentation/screens/payment_screen.dart';
+import 'package:firebase_app/features/feature_cart/presentation/screens/result_screen.dart';
 import 'package:firebase_app/features/feature_home/presentation/bloc/home_bloc.dart';
 import 'package:firebase_app/features/feature_home/presentation/event/home_event.dart';
 import 'package:firebase_app/features/feature_home/presentation/screens/product/product_screen.dart';
@@ -84,7 +87,10 @@ class AppRouter {
         },
         routes: [
           GoRoute(path: "/cart", builder: (context, state) => CartScreen()),
-          GoRoute(path: "/get-adress",builder: (context, state) => CartAdressScreen())
+          GoRoute(path: "/get-adress",builder: (context, state) => CartAdressScreen()),
+          GoRoute(path: "/note",builder: (context, state) => NoteScreen()),
+          GoRoute(path: "/payment",builder: (context, state) => PaymentScreen()),
+          GoRoute(path: "/result",builder: (context, state) => ResultScreen())
         ],
       ),
       ShellRoute(

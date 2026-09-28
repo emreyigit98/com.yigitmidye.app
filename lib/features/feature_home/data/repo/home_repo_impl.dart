@@ -5,9 +5,7 @@ import 'package:firebase_app/features/feature_home/data/data_source/home_datasou
 import 'package:firebase_app/features/feature_home/data/mapper/home_mapper.dart';
 import 'package:firebase_app/features/feature_home/data/models/category_model.dart';
 import 'package:firebase_app/features/feature_home/data/models/product_model.dart';
-import 'package:firebase_app/features/feature_home/domain/entities/category_entity.dart';
 import 'package:firebase_app/features/feature_home/domain/entities/home_entity.dart';
-import 'package:firebase_app/features/feature_home/domain/entities/product_entity.dart';
 import 'package:firebase_app/features/feature_home/domain/repo/home_repo.dart';
 import 'package:injectable/injectable.dart';
 

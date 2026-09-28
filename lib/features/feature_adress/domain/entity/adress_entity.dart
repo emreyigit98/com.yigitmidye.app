@@ -12,7 +12,7 @@ class AdressEntity {
   final String builderNo;
   final String note;
 
-  String get fullAdress => "$neigh $street $apartmentNo/$builderNo $city/$district";
+  String get fullAdress => "$neigh $street $apartmentNo/$builderNo $city detay:$district/$note";
   String get apiUrl => "$city , $district , $neigh , No:$apartmentNo";
 
   AdressEntity({
@@ -27,4 +27,19 @@ class AdressEntity {
     required this.builderNo,
     required this.note
   });
+
+  Map<String,dynamic> toMap() {
+    return {
+      "id" : id,
+      "name" : name,
+      "surname" : surname,
+      "city" : city,
+      "district" : district,
+      "neigh" : neigh,
+      "street" : street,
+      "apartment_no" : apartmentNo,
+      "builder_no" : builderNo,
+      "note" : note
+    };
+  }
 }

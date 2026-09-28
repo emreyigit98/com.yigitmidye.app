@@ -1,6 +1,7 @@
 
 import 'package:firebase_app/features/feature_cart/data/model/cart_model.dart';
 import 'package:firebase_app/features/feature_cart/data/model/product_model.dart';
+import 'package:firebase_app/features/feature_cart/data/model/set_order_model.dart';
 
 abstract class CartDatasourceRepo {
   Future<void> setCartItem(CartModel cartModel);
@@ -8,4 +9,5 @@ abstract class CartDatasourceRepo {
   Future<List<ProductModel>> getProductItems(List<String> productIds);
   Future<void> deleteCartItem(String productId);
   Stream<int> cartCount();
+  Future<void> setOrderItem(SetOrderModel model);
 }

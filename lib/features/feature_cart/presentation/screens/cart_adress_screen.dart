@@ -1,9 +1,9 @@
+import 'package:firebase_app/core/extensions/snackbar_extension.dart';
 import 'package:firebase_app/features/feature_adress/domain/entity/adress_entity.dart';
 import 'package:firebase_app/features/feature_cart/presentation/bloc/cart_bloc.dart';
 import 'package:firebase_app/features/feature_cart/presentation/event/cart_event.dart';
 import 'package:firebase_app/features/feature_cart/presentation/state/adress_status.dart';
 import 'package:firebase_app/features/feature_cart/presentation/state/cart_state.dart';
-import 'package:firebase_app/features/feature_cart/presentation/state/cart_status.dart';
 import 'package:firebase_app/features/feature_cart/presentation/widgets/card/adress_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -164,30 +164,38 @@ class _CartAdressScreenState extends State<CartAdressScreen> {
                               setState(() {
                                 adress = entity;
                               });
+                              context.read<CartBloc>().add(
+                                UpdateAdressEvent(adress),
+                              );
                             },
                           );
                         },
                       ),
                     ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0XFFFA0351),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0XFFFA0351),
+                        foregroundColor: Colors.white,
+                        minimumSize: Size(double.infinity, 48),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        onPressed: () {},
-                        child: Text("Devam et"),
                       ),
+                      onPressed: () {
+                        if (adress == null) {
+                          context.showSnackBar(
+                            message: "Lütfen teslimat adresi seçin",
+                          );
+                        } else {
+                          context.push("/note");
+                        }
+                      },
+                      child: Text("Devam et"),
                     ),
                   ],
                 ),
               );
             }
-
             return Center(child: CircularProgressIndicator());
           },
         ),

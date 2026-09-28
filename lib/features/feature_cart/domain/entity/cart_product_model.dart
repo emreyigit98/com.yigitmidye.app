@@ -31,6 +31,21 @@ class CartProductModel {
     required this.quantity,
   });
 
+
+  Map<String,dynamic> toMap() {
+    return {
+      "product_id": productId,
+      "is_active" : isActive,
+      "is_campaign" : isCampaign,
+      "product_img" : productImg,
+      "old_price" : oldPrice,
+      "product_name" : productName,
+      "product_price" : productPrice,
+      "product_title" : productTitle,
+      "quantity" : quantity
+    };
+  }
+
   CartProductModel copyWith({int? quantity}) {
     return CartProductModel(
       productId: productId,

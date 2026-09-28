@@ -1,5 +1,6 @@
 import 'package:firebase_app/core/util/static_map_url.dart';
 import 'package:firebase_app/features/feature_adress/domain/entity/adress_entity.dart';
+import 'package:firebase_app/features/feature_cart/presentation/widgets/button/custom_radio_button.dart';
 import 'package:flutter/material.dart';
 
 class AdressCard extends StatelessWidget {
@@ -30,28 +31,7 @@ class AdressCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              height: 22,
-              width: 22,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: selected ? Colors.black : Colors.grey.shade700,
-                ),
-              ),
-              child: selected
-                  ? Center(
-                      child: Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.black,
-                        ),
-                      ),
-                    )
-                  : null,
-            ),
+            CustomRadioButton(selected: selected),
             SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -75,6 +55,7 @@ class AdressCard extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(width: 6),
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.network(

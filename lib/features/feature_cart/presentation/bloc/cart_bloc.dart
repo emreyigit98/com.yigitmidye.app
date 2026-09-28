@@ -1,13 +1,16 @@
 import 'package:firebase_app/core/extensions/custom_exceptions_mapper.dart';
 import 'package:firebase_app/features/feature_adress/domain/use_cases/get_adreses_usecase.dart';
 import 'package:firebase_app/features/feature_cart/domain/entity/cart_entity.dart';
+import 'package:firebase_app/features/feature_cart/domain/entity/set_order_entity.dart';
 import 'package:firebase_app/features/feature_cart/domain/use_cases/delete_cart_item_usecase.dart';
 import 'package:firebase_app/features/feature_cart/domain/use_cases/get_cart_items_usecase.dart';
 import 'package:firebase_app/features/feature_cart/domain/use_cases/set_cart_item_usecase.dart';
+import 'package:firebase_app/features/feature_cart/domain/use_cases/set_order_usecase.dart';
 import 'package:firebase_app/features/feature_cart/presentation/event/cart_event.dart';
 import 'package:firebase_app/features/feature_cart/presentation/state/adress_status.dart';
 import 'package:firebase_app/features/feature_cart/presentation/state/cart_state.dart';
 import 'package:firebase_app/features/feature_cart/presentation/state/cart_status.dart';
+import 'package:firebase_app/features/feature_cart/presentation/state/order_status.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
@@ -24,12 +27,14 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final SetCartItemUsecase _setCartItemUsecase;
   final DeleteCartItemUsecase _deleteCartItemUsecase;
   final GetAdresesUsecase _getAdresesUsecase;
+  final SetOrderUsecase _setOrderUsecase;
 
   CartBloc(
     this._getCartItemsUsecase,
     this._setCartItemUsecase,
     this._deleteCartItemUsecase,
-    this._getAdresesUsecase
+    this._getAdresesUsecase,
+    this._setOrderUsecase,
   ) : super(CartState()) {
     on<GetCartItemsEvent>(_getCartItems);
     on<UploadCartItemsEvent>(_uploadCartItem);
@@ -39,15 +44,33 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     );
     on<DeleteCartItemEvent>(_deleteCartItem);
     on<GetAdressItemEvent>(_getAdressItem);
+    on<SetOrderItemEvent>(_setOrderItem);
+
+    on<UpdateAdressEvent>((event,emit) {
+      emit(state.copyWith(entity: event.entity));
+    });
+
+    on<UpdatePaymentEvent>((event,emit) {
+      emit(state.copyWith(payment: event.entity));
+    });
+
+    on<UpdateOrderNoteEvent>((event,emit) {
+      emit(state.copyWith(orderNote: event.orderNote));
+    });
   }
 
-  Future<void> _getCartItems(GetCartItemsEvent event,Emitter<CartState> emit) async {
+  Future<void> _getCartItems(
+    GetCartItemsEvent event,
+    Emitter<CartState> emit,
+  ) async {
     emit(state.copyWith(cartStatus: CartItemsLoading()));
     final result = await _getCartItemsUsecase.getCartProductItems();
 
     result.fold(
       (exception) {
-        emit(state.copyWith(cartStatus: CartItemsFailure(exception.toMessage())));
+        emit(
+          state.copyWith(cartStatus: CartItemsFailure(exception.toMessage())),
+        );
       },
       (data) {
         emit(state.copyWith(products: data, cartStatus: CartItemsSuccess()));
@@ -55,7 +78,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     );
   }
 
-  Future<void> _uploadCartItem(UploadCartItemsEvent event,Emitter<CartState> emit) async {
+  Future<void> _uploadCartItem(
+    UploadCartItemsEvent event,
+    Emitter<CartState> emit,
+  ) async {
     final uploadItems = state.products.map((cartItem) {
       if (cartItem.productId == event.productId) {
         return cartItem.copyWith(quantity: event.quantity);
@@ -70,8 +96,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     );
   }
 
-  Future<void> _updateCartItem( UpdateCartItemEvent event,Emitter<CartState> emit) async {
-
+  Future<void> _updateCartItem(
+    UpdateCartItemEvent event,
+    Emitter<CartState> emit,
+  ) async {
     final cartEntity = CartEntity(
       id: event.productId,
       quantity: event.quantity,
@@ -82,7 +110,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     result.fold(
       (exception) {
         emit(
-          state.copyWith(cartStatus: UploadCartItemFailure(exception.toMessage())),
+          state.copyWith(
+            cartStatus: UploadCartItemFailure(exception.toMessage()),
+          ),
         );
       },
       (_) {
@@ -92,32 +122,76 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     );
   }
 
-  Future<void> _deleteCartItem(DeleteCartItemEvent event,Emitter<CartState> emit) async {
-
+  Future<void> _deleteCartItem(
+    DeleteCartItemEvent event,
+    Emitter<CartState> emit,
+  ) async {
     emit(state.copyWith(cartStatus: DeleteCartItemLoading()));
     final result = await _deleteCartItemUsecase.deleteCartItem(event.productId);
 
     result.fold(
       (exception) {
-        emit(state.copyWith(cartStatus: DeleteCartItemFailure(exception.toMessage())));
+        emit(
+          state.copyWith(
+            cartStatus: DeleteCartItemFailure(exception.toMessage()),
+          ),
+        );
       },
-       (_) {
+      (_) {
         emit(state.copyWith(cartStatus: DeleteCartItemSuccess()));
         add(GetCartItemsEvent());
-       }
+      },
     );
   }
 
-  Future<void> _getAdressItem(GetAdressItemEvent event,Emitter<CartState> emit) async {
+  Future<void> _getAdressItem(
+    GetAdressItemEvent event,
+    Emitter<CartState> emit,
+  ) async {
     emit(state.copyWith(adressStatus: GetAdressItemLoading()));
     final result = await _getAdresesUsecase.getAdress();
+    result.fold(
+      (exception) {
+        emit(
+          state.copyWith(
+            adressStatus: GetAdressItemFailure(exception.toMessage()),
+          ),
+        );
+      },
+      (data) {
+        emit(
+          state.copyWith(adressStatus: GetAdressItemSuccess(), adresses: data),
+        );
+      },
+    );
+  }
+
+  Future<void> _setOrderItem(SetOrderItemEvent event,Emitter<CartState> emit) async {
+    emit(state.copyWith(orderStatus: OrderSetLoading()));
+
+    final adress = state.entity;
+    final payment = state.payment;
+
+    if(adress == null || payment == null) {
+      emit(state.copyWith(orderStatus: OrderSetFailure("Adres ve ödeme yöntemi seçilmedi.")));
+      return;
+    }
+
+    final entity = SetOrderEntity(
+      orderId: state.orderIdGenerator,
+      products: state.products,
+      adress: adress,
+      payment: payment,
+      orderNote: state.orderNote,
+      totalPrice: state.totalPrice,
+    );
+
+    final result = await _setOrderUsecase.setOrderItem(entity);
+
     result.fold((exception) {
-      emit(state.copyWith(adressStatus: GetAdressItemFailure(exception.toMessage())));
-    },(data) {
-      emit(state.copyWith(
-        adressStatus: GetAdressItemSuccess(),
-        adresses: data
-      ));
+      emit(state.copyWith(orderStatus: OrderSetFailure(exception.toMessage())));
+    }, (_) {
+      emit(state.copyWith(orderStatus: OrderSetSuccess()));
     });
   }
 }
