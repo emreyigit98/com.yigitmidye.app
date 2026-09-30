@@ -18,9 +18,7 @@ class AuthDatasourceRepoImpl implements AuthDatasourceRepo {
     await _firebaseAuth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       forceResendingToken: forceResendingToken,
-      verificationCompleted: (_) {
-        print('verificationCompleted tetiklendi');
-      },
+      verificationCompleted: (_) {},
       verificationFailed: (error) {
         if(!completer.isCompleted) {
           completer.complete(VerificationFailed(error));

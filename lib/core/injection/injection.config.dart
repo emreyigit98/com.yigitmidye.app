@@ -11,6 +11,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:cloud_firestore/cloud_firestore.dart' as _i974;
 import 'package:firebase_app/core/injection/module.dart' as _i609;
+import 'package:firebase_app/core/notification/notification_service.dart'
+    as _i75;
 import 'package:firebase_app/core/session/data/data_source/session_datasource_repo.dart'
     as _i1029;
 import 'package:firebase_app/core/session/data/data_source/session_datasource_repo_impl.dart'
@@ -97,7 +99,12 @@ import 'package:firebase_app/features/feature_home/domain/use_cases/home_data/ho
     as _i473;
 import 'package:firebase_app/features/feature_home/presentation/bloc/home_bloc.dart'
     as _i874;
+import 'package:firebase_app/features/feature_notification/presentation/bloc/notification_cubit.dart'
+    as _i908;
 import 'package:firebase_auth/firebase_auth.dart' as _i59;
+import 'package:firebase_messaging/firebase_messaging.dart' as _i892;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    as _i163;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
@@ -110,9 +117,24 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final module = _$Module();
     gh.lazySingleton<_i59.FirebaseAuth>(() => module.firebaseAuth);
+    gh.lazySingleton<_i892.FirebaseMessaging>(() => module.messaging);
     gh.lazySingleton<_i974.FirebaseFirestore>(() => module.firebaseFirestore);
+    gh.lazySingleton<_i163.FlutterLocalNotificationsPlugin>(
+      () => module.plugin,
+    );
+    gh.lazySingleton<_i75.NotificationService>(
+      () => _i75.NotificationService(
+        gh<_i892.FirebaseMessaging>(),
+        gh<_i59.FirebaseAuth>(),
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i163.FlutterLocalNotificationsPlugin>(),
+      ),
+    );
     gh.lazySingleton<_i397.HomeDatasourceRepo>(
       () => _i316.HomeDatasourceRepoImpl(gh<_i974.FirebaseFirestore>()),
+    );
+    gh.factory<_i908.NotificationCubit>(
+      () => _i908.NotificationCubit(gh<_i75.NotificationService>()),
     );
     gh.lazySingleton<_i641.AdressDatasourceRepo>(
       () => _i325.AdressDatasourceRepoImpl(

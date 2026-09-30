@@ -4,6 +4,7 @@ import 'package:firebase_app/features/feature_cart/presentation/event/cart_event
 import 'package:firebase_app/features/feature_cart/presentation/state/cart_state.dart';
 import 'package:firebase_app/features/feature_cart/presentation/state/cart_status.dart';
 import 'package:firebase_app/features/feature_cart/presentation/widgets/card/cart_product_card.dart';
+import 'package:firebase_app/features/feature_notification/presentation/bloc/notification_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +25,7 @@ class _CartScreenState extends State<CartScreen> {
   void initState() {
     super.initState();
     context.read<CartBloc>().add(GetCartItemsEvent());
+    context.read<NotificationCubit>().getToken();
   }
 
   @override

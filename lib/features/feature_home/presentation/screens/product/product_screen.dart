@@ -18,6 +18,7 @@ import 'package:firebase_app/features/feature_home/presentation/widgets/sheet/pr
 import 'package:firebase_app/features/feature_home/presentation/widgets/sheet/update_name_sheet.dart';
 import 'package:firebase_app/features/feature_home/presentation/widgets/spacing/home_spacing.dart';
 import 'package:firebase_app/features/feature_home/presentation/widgets/title/home_title.dart';
+import 'package:firebase_app/features/feature_notification/presentation/bloc/notification_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -31,6 +32,13 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<NotificationCubit>().requestPermission();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SessionCubit, SessionState>(
