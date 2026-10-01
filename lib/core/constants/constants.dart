@@ -6,6 +6,9 @@ class Constants {
   static final String users = "Users";
   static final String cart = "Cart";
   static final String adress = "Adress";
+  static final String orders = "Orders";
+  static final String userId = "user_id";
+  static final String createdAt = "created_at";
 
   static final String apiKey = "AIzaSyD4cZfWBnG02bdykGju3h6DPE6vtOF_XFQ";
 

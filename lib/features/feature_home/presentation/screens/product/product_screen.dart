@@ -95,6 +95,9 @@ class _ProductScreenState extends State<ProductScreen> {
                       context.pop();
                       context.push("/adress");
                     },
+                    goOrders: () {
+                      context.push("/orders");
+                    },
                     signOut: () {
                       context.pop();
                       context.read<SessionCubit>().signOut();

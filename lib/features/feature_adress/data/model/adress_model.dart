@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/features/feature_adress/domain/entity/adress_entity.dart';
 
 class AdressModel extends AdressEntity {
+
   AdressModel({
     required super.id,
     required super.name,

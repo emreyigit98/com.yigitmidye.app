@@ -19,6 +19,8 @@ import 'package:firebase_app/features/feature_cart/presentation/screens/result_s
 import 'package:firebase_app/features/feature_home/presentation/bloc/home_bloc.dart';
 import 'package:firebase_app/features/feature_home/presentation/event/home_event.dart';
 import 'package:firebase_app/features/feature_home/presentation/screens/product/product_screen.dart';
+import 'package:firebase_app/features/feature_order/presentation/bloc/orders_cubit.dart';
+import 'package:firebase_app/features/feature_order/presentation/screen/order_screen.dart';
 import 'package:firebase_app/features/feature_splash/presentation/screens/splash_screen.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -108,6 +110,12 @@ class AppRouter {
           ),
         ],
       ),
+      GoRoute(path: "/orders",builder: (context, state) {
+        return BlocProvider(
+          create: (context) => servisLocarator<OrdersCubit>()..getOrders(),
+          child: OrderScreen(),
+        );
+      })
     ],
   );
 }

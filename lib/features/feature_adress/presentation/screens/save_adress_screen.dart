@@ -272,7 +272,10 @@ void _showBottomSheet(BuildContext context, Function(String) onChanged) {
     showDragHandle: true,
     context: context,
     builder: (context) {
-      return SelectNeighSheet(onChanged: onChanged);
+      return FractionallySizedBox(
+        heightFactor: 0.7,
+        child: SelectNeighSheet(onChanged: onChanged),
+      );
     },
   );
 }

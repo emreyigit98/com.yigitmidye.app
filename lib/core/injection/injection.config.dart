@@ -101,6 +101,18 @@ import 'package:firebase_app/features/feature_home/presentation/bloc/home_bloc.d
     as _i874;
 import 'package:firebase_app/features/feature_notification/presentation/bloc/notification_cubit.dart'
     as _i908;
+import 'package:firebase_app/features/feature_order/data/data_source/orders_datasource_repo.dart'
+    as _i969;
+import 'package:firebase_app/features/feature_order/data/data_source/orders_datasource_repo_impl.dart'
+    as _i413;
+import 'package:firebase_app/features/feature_order/data/repo/order_repo_impl.dart'
+    as _i779;
+import 'package:firebase_app/features/feature_order/domain/repo/order_repo.dart'
+    as _i504;
+import 'package:firebase_app/features/feature_order/domain/use_cases/order_usecase.dart'
+    as _i788;
+import 'package:firebase_app/features/feature_order/presentation/bloc/orders_cubit.dart'
+    as _i579;
 import 'package:firebase_auth/firebase_auth.dart' as _i59;
 import 'package:firebase_messaging/firebase_messaging.dart' as _i892;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
@@ -122,6 +134,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i163.FlutterLocalNotificationsPlugin>(
       () => module.plugin,
     );
+    gh.lazySingleton<_i969.OrdersDatasourceRepo>(
+      () => _i413.OrdersDatasourceRepoImpl(
+        gh<_i59.FirebaseAuth>(),
+        gh<_i974.FirebaseFirestore>(),
+      ),
+    );
     gh.lazySingleton<_i75.NotificationService>(
       () => _i75.NotificationService(
         gh<_i892.FirebaseMessaging>(),
@@ -129,6 +147,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i974.FirebaseFirestore>(),
         gh<_i163.FlutterLocalNotificationsPlugin>(),
       ),
+    );
+    gh.lazySingleton<_i504.OrderRepo>(
+      () => _i779.OrderRepoImpl(gh<_i969.OrdersDatasourceRepo>()),
     );
     gh.lazySingleton<_i397.HomeDatasourceRepo>(
       () => _i316.HomeDatasourceRepoImpl(gh<_i974.FirebaseFirestore>()),
@@ -160,6 +181,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i30.SaveAdressUsecase>(
       () => _i30.SaveAdressUsecase(gh<_i780.AdressRepo>()),
     );
+    gh.lazySingleton<_i788.OrderUsecase>(
+      () => _i788.OrderUsecase(gh<_i504.OrderRepo>()),
+    );
     gh.lazySingleton<_i882.HomeRepo>(
       () => _i931.HomeRepoImpl(gh<_i397.HomeDatasourceRepo>()),
     );
@@ -183,6 +207,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i351.VerifyPhoneUsecase>(
       () => _i351.VerifyPhoneUsecase(gh<_i899.AuthRepo>()),
+    );
+    gh.factory<_i579.OrdersCubit>(
+      () => _i579.OrdersCubit(gh<_i788.OrderUsecase>()),
     );
     gh.lazySingleton<_i473.HomeDataUsecase>(
       () => _i473.HomeDataUsecase(gh<_i882.HomeRepo>()),
