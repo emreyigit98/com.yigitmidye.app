@@ -32,7 +32,6 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -69,9 +68,7 @@ class _ProductScreenState extends State<ProductScreen> {
             ],
             title: state is Authenticated
                 ? state.user.displayName == null
-                      ? UpdateMessage(
-                          onTap: () => _showUpdataNameSheet(context),
-                        )
+                      ? UpdateMessage(onTap: () => showUpdataNameSheet(context))
                       : WelcomeMessage(
                           displayName: state.user.displayName ?? "",
                         )
@@ -80,10 +77,6 @@ class _ProductScreenState extends State<ProductScreen> {
                       context.push("/input-phone");
                     },
                   ),
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(1),
-              child: Container(height: 1, color: Colors.grey),
-            ),
           ),
           drawer: state is Authenticated
               ? Drawer(
@@ -96,7 +89,12 @@ class _ProductScreenState extends State<ProductScreen> {
                       context.push("/adress");
                     },
                     goOrders: () {
+                      context.pop();
                       context.push("/orders");
+                    },
+                    goProfile: () {
+                      context.pop();
+                      context.push("/profile");
                     },
                     signOut: () {
                       context.pop();
@@ -111,6 +109,45 @@ class _ProductScreenState extends State<ProductScreen> {
               builder: (context, state) {
                 return CustomScrollView(
                   slivers: [
+                    SliverToBoxAdapter(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 4,vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              LucideIcons.circleCheck,
+                              color: Colors.green,
+                              size: 20,
+                            ),
+                            SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Dükkanımız açık",style: TextStyle(
+                                  fontFamily: "Inter",
+                                  fontSize: 14,
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold
+                                ),),
+                                SizedBox(height: 4),
+                                Text("Sipariş verebilirsiniz.",style: TextStyle(
+                                  fontFamily: "Inter",
+                                  fontSize: 12,
+                                  color: Colors.green.shade400,
+                                  fontWeight: FontWeight.w600
+                                )),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
                     HomeSpacing(),
                     HomeTitle(title: "Kategoriler"),
                     HomeSpacing(),
@@ -220,6 +257,7 @@ void _showProductSheet(BuildContext context, ProductEntity product) {
   showModalBottomSheet(
     isScrollControlled: true,
     showDragHandle: true,
+    backgroundColor: Colors.white,
     context: context,
     builder: (context) {
       return BlocProvider(
@@ -230,7 +268,7 @@ void _showProductSheet(BuildContext context, ProductEntity product) {
   );
 }
 
-void _showUpdataNameSheet(BuildContext context) {
+void showUpdataNameSheet(BuildContext context) {
   showModalBottomSheet(
     backgroundColor: Colors.white,
     isScrollControlled: true,

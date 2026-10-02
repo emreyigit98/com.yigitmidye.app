@@ -9,5 +9,7 @@ abstract class SessionRepo {
 
   Future<Either<CustomException,Unit>> updateDisplayName(String name);
 
+  Future<Either<CustomException,Unit>> userDelete();
+
   Future<void> signOut();
 }

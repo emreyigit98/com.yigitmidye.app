@@ -1,5 +1,6 @@
 import 'package:firebase_app/core/injection/injection.dart';
 import 'package:firebase_app/core/session/presentation/cubit/session_cubit.dart';
+import 'package:firebase_app/core/session/presentation/cubit/user_delete_cubit.dart';
 import 'package:firebase_app/core/session/presentation/state/session_state.dart';
 import 'package:firebase_app/features/feature_adress/presentation/bloc/adress_bloc.dart';
 import 'package:firebase_app/features/feature_adress/presentation/event/adress_event.dart';
@@ -21,6 +22,7 @@ import 'package:firebase_app/features/feature_home/presentation/event/home_event
 import 'package:firebase_app/features/feature_home/presentation/screens/product/product_screen.dart';
 import 'package:firebase_app/features/feature_order/presentation/bloc/orders_cubit.dart';
 import 'package:firebase_app/features/feature_order/presentation/screen/order_screen.dart';
+import 'package:firebase_app/features/feature_profile/presentation/screen/profile_screen.dart';
 import 'package:firebase_app/features/feature_splash/presentation/screens/splash_screen.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -82,23 +84,29 @@ class AppRouter {
       ShellRoute(
         builder: (context, state, child) {
           return BlocProvider(
-            create: (context) =>
-                servisLocarator<CartBloc>(),
+            create: (context) => servisLocarator<CartBloc>(),
             child: child,
           );
         },
         routes: [
           GoRoute(path: "/cart", builder: (context, state) => CartScreen()),
-          GoRoute(path: "/get-adress",builder: (context, state) => CartAdressScreen()),
-          GoRoute(path: "/note",builder: (context, state) => NoteScreen()),
-          GoRoute(path: "/payment",builder: (context, state) => PaymentScreen()),
-          GoRoute(path: "/result",builder: (context, state) => ResultScreen())
+          GoRoute(
+            path: "/get-adress",
+            builder: (context, state) => CartAdressScreen(),
+          ),
+          GoRoute(path: "/note", builder: (context, state) => NoteScreen()),
+          GoRoute(
+            path: "/payment",
+            builder: (context, state) => PaymentScreen(),
+          ),
+          GoRoute(path: "/result", builder: (context, state) => ResultScreen()),
         ],
       ),
       ShellRoute(
         builder: (context, state, child) {
           return BlocProvider(
-            create: (context) => servisLocarator<AdressBloc>()..add(GetAdressEvent()),
+            create: (context) =>
+                servisLocarator<AdressBloc>()..add(GetAdressEvent()),
             child: child,
           );
         },
@@ -110,12 +118,24 @@ class AppRouter {
           ),
         ],
       ),
-      GoRoute(path: "/orders",builder: (context, state) {
-        return BlocProvider(
-          create: (context) => servisLocarator<OrdersCubit>()..getOrders(),
-          child: OrderScreen(),
-        );
-      })
+      GoRoute(
+        path: "/orders",
+        builder: (context, state) {
+          return BlocProvider(
+            create: (context) => servisLocarator<OrdersCubit>()..getOrders(),
+            child: OrderScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        path: "/profile",
+        builder: (context, state) {
+          return BlocProvider(
+            create: (context) => servisLocarator<UserDeleteCubit>(),
+            child: ProfileScreen(),
+          );
+        },
+      ),
     ],
   );
 }

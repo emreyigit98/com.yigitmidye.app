@@ -1,10 +1,13 @@
 
+import 'dart:math';
+
 import 'package:dartz/dartz.dart';
 import 'package:firebase_app/core/exceptions/custom_exception.dart';
 import 'package:firebase_app/core/extensions/custom_exceptions_mapper.dart';
 import 'package:firebase_app/core/session/data/data_source/session_datasource_repo.dart';
 import 'package:firebase_app/core/session/domain/entity/user_entity.dart';
 import 'package:firebase_app/core/session/domain/repo/session_repo.dart';
+import 'package:flutter/rendering.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: SessionRepo)
@@ -34,6 +37,17 @@ class SessionRepoImpl implements SessionRepo {
       await _sessionDatasourceRepo.updateDisplayname(name);
       return Right(unit);
     }catch(e) {
+      return Left(e.toCustomException());
+    }
+  }
+
+  @override
+  Future<Either<CustomException, Unit>> userDelete() async {
+    try {
+      await _sessionDatasourceRepo.userDelete();
+      return Right(unit);
+    }catch(exception) {
+      debugPrint("log $exception");
       return Left(e.toCustomException());
     }
   }

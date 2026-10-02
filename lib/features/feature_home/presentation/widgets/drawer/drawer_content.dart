@@ -1,3 +1,4 @@
+import 'package:firebase_app/core/util/welcome_message.dart';
 import 'package:firebase_app/features/feature_home/presentation/widgets/title/section_title.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,7 @@ class DrawerContent extends StatelessWidget {
   final VoidCallback goHome;
   final VoidCallback goAddress;
   final VoidCallback goOrders;
+  final VoidCallback goProfile;
   final VoidCallback signOut;
 
   const DrawerContent({
@@ -15,6 +17,7 @@ class DrawerContent extends StatelessWidget {
     required this.goHome,
     required this.goAddress,
     required this.goOrders,
+    required this.goProfile,
     required this.signOut,
   });
 
@@ -25,7 +28,7 @@ class DrawerContent extends StatelessWidget {
       children: [
         UserAccountsDrawerHeader(
           decoration: const BoxDecoration(color: Color(0XFFFA0351)),
-          accountName: Text("İyi akşamlar, ${displayName ?? ""}"),
+          accountName: Text("${welcomeMessage()} ${displayName ?? ""}"),
           accountEmail: null,
           currentAccountPicture: CircleAvatar(
             backgroundColor: Colors.white,
@@ -61,12 +64,7 @@ class DrawerContent extends StatelessWidget {
           leading: const Icon(Icons.person_outline),
           title: const Text("Profilim"),
           trailing: const Icon(Icons.chevron_right_rounded),
-        ),
-
-        ListTile(
-          leading: const Icon(Icons.notifications_none_outlined),
-          title: const Text("Bildirimler"),
-          trailing: const Icon(Icons.chevron_right_rounded),
+          onTap: goProfile,
         ),
 
         const Divider(),

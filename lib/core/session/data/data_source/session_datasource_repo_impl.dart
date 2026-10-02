@@ -1,4 +1,5 @@
 
+import 'package:firebase_app/core/exceptions/custom_exception.dart';
 import 'package:firebase_app/core/session/data/data_source/session_datasource_repo.dart';
 import 'package:firebase_app/core/session/data/model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,6 +30,13 @@ class SessionDatasourceRepoImpl implements SessionDatasourceRepo {
     final currentUser = _firebaseAuth.currentUser;
     if(currentUser == null) return;
     await currentUser.updateDisplayName(name);
+  }
+
+  @override
+  Future<void> userDelete() async {
+    final user = _firebaseAuth.currentUser;
+    if(user == null) throw UserNotFound();
+    await user.delete();
   }
 
   @override

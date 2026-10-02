@@ -1,3 +1,4 @@
+import 'package:firebase_app/core/extensions/snackbar_extension.dart';
 import 'package:firebase_app/features/feature_auth/presentation/bloc/auth_bloc.dart';
 import 'package:firebase_app/features/feature_auth/presentation/event/auth_event.dart';
 import 'package:firebase_app/features/feature_auth/presentation/state/auth_state.dart';
@@ -38,9 +39,7 @@ class _InputPhoneScreenState extends State<InputPhoneScreen> {
 
         if (authStatus is SendCodeError) {
           final message = state.authStatus as SendCodeError;
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(message.message)));
+          context.showSnackBar(message: message.message);
         }
       },
       builder: (context, state) {

@@ -1,3 +1,5 @@
+import 'package:firebase_app/core/exceptions/custom_exception.dart';
+import 'package:firebase_app/core/extensions/custom_exceptions_mapper.dart';
 import 'package:firebase_app/core/extensions/snackbar_extension.dart';
 import 'package:firebase_app/features/feature_cart/presentation/bloc/cart_bloc.dart';
 import 'package:firebase_app/features/feature_cart/presentation/event/cart_event.dart';
@@ -8,6 +10,7 @@ import 'package:firebase_app/features/feature_notification/presentation/bloc/not
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
@@ -19,8 +22,6 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-
-  
   @override
   void initState() {
     super.initState();
@@ -55,7 +56,6 @@ class _CartScreenState extends State<CartScreen> {
       body: SafeArea(
         child: BlocConsumer<CartBloc, CartState>(
           listener: (context, state) {
-            
             if (state.cartStatus is UploadCartItemFailure) {
               final message = state.cartStatus as UploadCartItemFailure;
               context.showSnackBar(message: message.exception);
@@ -86,12 +86,15 @@ class _CartScreenState extends State<CartScreen> {
                         height: 80,
                       ),
                       SizedBox(height: 20),
-                      const Text("Sepetiniz boş, hadi bir şeyler seçelim!",style: TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w700
-                      )),
+                      const Text(
+                        "Sepetiniz boş, hadi bir şeyler seçelim!",
+                        style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                       SizedBox(height: 20),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -261,7 +264,51 @@ class _CartScreenState extends State<CartScreen> {
             }
             if (state.cartStatus is CartItemsFailure) {
               final exception = state.cartStatus as CartItemsFailure;
-              return Center(child: Text(exception.exception));
+
+              if (exception.exception is UserNotFound) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/icons/login_icon.svg",
+                          width: 100,
+                          height: 100,
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          "Sepetinize erişmek ve siparişinizi tamamlamak için hesabınıza giriş yapın.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFA0351),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: () {
+                            context.push("/input-phone");
+                          },
+                          child: Text("Giriş yap"),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              return Center(child: Text(exception.exception.toMessage()));
             }
             return SizedBox.shrink();
           },

@@ -69,7 +69,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     result.fold(
       (exception) {
         emit(
-          state.copyWith(cartStatus: CartItemsFailure(exception.toMessage())),
+          state.copyWith(cartStatus: CartItemsFailure(exception)),
         );
       },
       (data) {

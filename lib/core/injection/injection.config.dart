@@ -25,6 +25,8 @@ import 'package:firebase_app/core/session/domain/use_cases/update_name_usecase.d
     as _i408;
 import 'package:firebase_app/core/session/domain/use_cases/user_changes_usecase.dart'
     as _i996;
+import 'package:firebase_app/core/session/domain/use_cases/user_delete_usecase.dart'
+    as _i168;
 import 'package:firebase_app/core/session/domain/use_cases/user_reolad_usecase.dart'
     as _i746;
 import 'package:firebase_app/core/session/domain/use_cases/user_signout_usecase.dart'
@@ -33,6 +35,8 @@ import 'package:firebase_app/core/session/presentation/cubit/display_name_cubit.
     as _i627;
 import 'package:firebase_app/core/session/presentation/cubit/session_cubit.dart'
     as _i405;
+import 'package:firebase_app/core/session/presentation/cubit/user_delete_cubit.dart'
+    as _i923;
 import 'package:firebase_app/features/feature_adress/data/data_source/adress_datasource_repo.dart'
     as _i641;
 import 'package:firebase_app/features/feature_adress/data/data_source/adress_datasource_repo_impl.dart'
@@ -242,6 +246,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i996.UserChangesUsecase>(
       () => _i996.UserChangesUsecase(gh<_i843.SessionRepo>()),
     );
+    gh.lazySingleton<_i168.UserDeleteUsecase>(
+      () => _i168.UserDeleteUsecase(gh<_i843.SessionRepo>()),
+    );
     gh.lazySingleton<_i746.UserReoladUsecase>(
       () => _i746.UserReoladUsecase(gh<_i843.SessionRepo>()),
     );
@@ -259,6 +266,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i320.SetOrderUsecase>(
       () => _i320.SetOrderUsecase(gh<_i851.CartRepo>()),
+    );
+    gh.factory<_i923.UserDeleteCubit>(
+      () => _i923.UserDeleteCubit(gh<_i168.UserDeleteUsecase>()),
     );
     gh.factory<_i627.DisplayNameCubit>(
       () => _i627.DisplayNameCubit(gh<_i408.UpdateNameUsecase>()),

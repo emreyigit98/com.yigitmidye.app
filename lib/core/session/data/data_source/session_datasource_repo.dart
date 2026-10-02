@@ -9,6 +9,8 @@ abstract class SessionDatasourceRepo {
 
   Future<void> updateDisplayname(String name);
 
+  Future<void> userDelete();
+
   Future<void> signOut();
 
 }

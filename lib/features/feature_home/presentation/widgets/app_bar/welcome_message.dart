@@ -1,8 +1,10 @@
 
+import 'package:firebase_app/core/util/welcome_message.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 
 class WelcomeMessage extends StatelessWidget {
+  
   final String displayName;
 
   const WelcomeMessage({super.key,required this.displayName});
@@ -12,7 +14,7 @@ class WelcomeMessage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("İyi akşamlar,$displayName 👋",style: TextStyle(
+        Text("${welcomeMessage()},$displayName 👋",style: TextStyle(
           fontFamily: "Inter",
           fontSize: 14,
           fontWeight: FontWeight.w700,

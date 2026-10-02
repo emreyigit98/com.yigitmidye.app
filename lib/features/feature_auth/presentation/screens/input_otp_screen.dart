@@ -1,3 +1,4 @@
+import 'package:firebase_app/core/extensions/snackbar_extension.dart';
 import 'package:firebase_app/features/feature_auth/presentation/bloc/auth_bloc.dart';
 import 'package:firebase_app/features/feature_auth/presentation/event/auth_event.dart';
 import 'package:firebase_app/features/feature_auth/presentation/state/auth_state.dart';
@@ -27,21 +28,14 @@ class _InputOtpScreenState extends State<InputOtpScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
-      listenWhen: (previous, current) => previous.authStatus != current.authStatus,
+      listenWhen: (previous, current) =>
+          previous.authStatus != current.authStatus,
       listener: (context, state) {
-
+        
         if (state.authStatus is VerifyCodeError) {
 
           final message = state.authStatus as VerifyCodeError;
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                message.message,
-                style: TextStyle(color: Colors.black, fontFamily: "Inter"),
-              ),
-            ),
-          );
+          context.showSnackBar(message: message.message); 
         }
 
         if (state.authStatus is VerifyCodeSuccessful) {
@@ -55,14 +49,12 @@ class _InputOtpScreenState extends State<InputOtpScreen> {
         }
 
         if (state.authStatus is ResendCodeSuccessful) {
-          Fluttertoast.showToast(
-            msg: "Sms kodunuz tekrar ${state.phoneNumber} gönderilmiştir.",
-            toastLength: Toast.LENGTH_LONG,
-          );
+          context.showSnackBar(message: "Sms kodunuz tekrar ${state.phoneNumber} gönderilmiştir.");
         }
       },
       builder: (context, state) {
-        final loading = state.authStatus is SendCodeLoading;
+        final loading = state.authStatus is VerifyCodeLoading;
+
         final resendLoading = state.authStatus is ResendCodeLoading;
 
         return AuthLayout(
@@ -152,10 +144,28 @@ class _InputOtpScreenState extends State<InputOtpScreen> {
                         ),
                       )
                     : ElevatedButton(
-                        onPressed: () {
-                          context.read<AuthBloc>().add(ResendCodeEvent());
-                        },
-                        child: Text("Tekrar gönder"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0XFFFA0351),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)
+                          )
+                        ),
+                        onPressed: resendLoading
+                            ? null
+                            : () {
+                                context.read<AuthBloc>().add(ResendCodeEvent());
+                              },
+                        child: resendLoading
+                            ? SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 1,
+                                ),
+                              )
+                            : Text("Tekrar gönder"),
                       ),
               ],
             ),

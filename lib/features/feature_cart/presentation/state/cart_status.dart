@@ -1,4 +1,6 @@
 
+import 'package:firebase_app/core/exceptions/custom_exception.dart';
+
 sealed class CartStatus { const CartStatus(); }
 
 class CartIdle extends CartStatus { const CartIdle(); }
@@ -9,7 +11,7 @@ class CartItemsSuccess extends CartStatus {
 }
 
 class CartItemsFailure extends CartStatus {
-  final String exception;
+  final CustomException exception;
   const CartItemsFailure(this.exception); 
 }
 
